@@ -102,9 +102,27 @@ export default function AIConsultantPage() {
         timestamp: new Date(),
       }]);
     } catch {
+      // PROTOTYPE FALLBACK
+      const lowerInput = text.toLowerCase();
+      let dummyResponse = "Terima kasih atas pertanyaannya! Saat ini sistem AI sedang dalam mode purwarupa (prototype). Untuk info lebih akurat, silakan konsultasi ke penyuluh pertanian setempat.";
+      
+      if (lowerInput.includes('harga') || lowerInput.includes('cabai')) {
+        dummyResponse = "**Estimasi Harga Cabai Merah (Jawa Barat):**\n- **Harga Petani:** Rp40.000 - Rp45.000/kg\n- **Harga Pasar Tradisional:** Rp55.000 - Rp65.000/kg\n\n*Tips:* Waktu terbaik menjual adalah saat stok di pengepul mulai menipis, biasanya di pagi hari atau hari menjelang akhir pekan. Hindari memanen saat hujan deras untuk mencegah pembusukan.";
+      } else if (lowerInput.includes('hama') || lowerInput.includes('ulat')) {
+        dummyResponse = "**Mengatasi Ulat Grayak Secara Organik:**\n1. **Semprotan Neem Oil:** Campurkan 1 sdm minyak mimba (neem oil) dengan 1 liter air dan sedikit sabun cuci piring. Semprotkan di pagi atau sore hari.\n2. **Rotasi Tanaman:** Hindari menanam jagung terus-menerus di lahan yang sama.\n3. **Predator Alami:** Pelihara predator alami seperti kumbang kubah (ladybugs).\n4. **Perangkap Feromon:** Gunakan perangkap feromon untuk menangkap ngengat jantan sebelum berkembang biak.";
+      } else if (lowerInput.includes('panen') || lowerInput.includes('kualitas')) {
+        dummyResponse = "**Tips Memaksimalkan Kualitas Panen:**\n- Lakukan pemanenan di **pagi hari** setelah embun kering, agar kesegaran lebih terjaga.\n- Sortir hasil panen segera (pisahkan yang rusak/busuk).\n- Gunakan keranjang bersih dengan sirkulasi udara yang baik (jangan gunakan karung plastik tertutup rapat).\n- Simpan di tempat teduh (hindari sinar matahari langsung) sebelum proses distribusi.";
+      } else if (lowerInput.includes('hitung') || lowerInput.includes('keuntungan')) {
+        dummyResponse = "**Simulasi Keuntungan 1 Ha Tomat:**\n- **Estimasi Biaya Produksi:** Rp45.000.000 (bibit, pupuk, tenaga kerja, pestisida organik)\n- **Estimasi Hasil Panen:** 25.000 kg (25 ton)\n- **Harga Jual Rata-Rata:** Rp5.000/kg (ke pengepul)\n- **Pendapatan Kotor:** Rp125.000.000\n- **Estimasi Laba Bersih:** Rp125M - Rp45M = **Rp80.000.000** per musim tanam.\n\n*Catatan:* Perhitungan ini adalah estimasi ideal. Faktor cuaca dan fluktuasi harga pasar bisa sangat mempengaruhi hasil nyata.";
+      } else if (lowerInput.includes('pupuk') || lowerInput.includes('kompos')) {
+        dummyResponse = "**Cara Membuat Pupuk Kompos Organik:**\n1. Kumpulkan sisa tanaman (daun kering, batang jagung, dll) dan kotoran ternak.\n2. Cincang bahan menjadi potongan kecil.\n3. Susun berlapis: bahan coklat (kering), bahan hijau (basah), dan kotoran ternak.\n4. Tambahkan larutan EM4 dan air secukupnya agar lembap (tidak terlalu basah).\n5. Tutup tumpukan dengan terpal. Aduk setiap minggu.\n6. Kompos siap pakai dalam 3-4 minggu saat berubah warna menjadi hitam dan berbau seperti tanah hutan.";
+      } else if (lowerInput.includes('musim') || lowerInput.includes('hujan')) {
+        dummyResponse = "**Komoditas Cocok untuk Musim Hujan:**\n- Padi sawah\n- Kangkung\n- Bayam\n- Sawi\n- Terong\n- Pare\n\n*Peringatan:* Jika menanam cabai atau tomat di musim hujan, waspadai serangan jamur (antraknosa) dan gunakan mulsa plastik serta perbaiki drainase bedengan agar akar tidak terendam air.";
+      }
+
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: '⚠️ Maaf, terjadi kesalahan saat menghubungi AI. Pastikan API key sudah dikonfigurasi dan coba lagi.',
+        content: `*(Mode Demo)*\n\n${dummyResponse}`,
         timestamp: new Date(),
       }]);
     } finally {

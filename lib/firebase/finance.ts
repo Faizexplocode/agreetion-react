@@ -16,6 +16,10 @@ export async function getFinanceSummary(
     const snap = await getDocs(q);
     const allOrders = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Order));
 
+    if (allOrders.length === 0) {
+      throw new Error("No data found, fallback to prototype");
+    }
+
     const completed = allOrders.filter((o) => o.status === 'completed').length;
     const totalRevenue = allOrders
       .filter((o) => o.status === 'completed')
@@ -32,8 +36,9 @@ export async function getFinanceSummary(
 
     return { completed, totalRevenue, pending, pendingAmount, allOrders };
   } catch (err) {
-    console.error('[finance] getFinanceSummary error:', err);
-    return { completed: 0, totalRevenue: 0, pending: 0, pendingAmount: 0, allOrders: [] };
+    console.warn('[finance] getFinanceSummary fallback to prototype due to:', err);
+    const { generatePrototypeFinanceSummary, generatePrototypeBuyerFinanceSummary } = require('@/lib/utils/prototypeData');
+    return role === 'farmer' ? generatePrototypeFinanceSummary() : generatePrototypeBuyerFinanceSummary();
   }
 }
 

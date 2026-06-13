@@ -60,13 +60,31 @@ export async function getDeliveries(
     const deliveryMap = new Map<string, Delivery>();
     deliveriesSnap.docs.forEach((d) => deliveryMap.set(d.id, d.data() as Delivery));
 
+    if (orders.length === 0) {
+      throw new Error("No data found, fallback to prototype");
+    }
+
     return orders.map((order) => ({
       ...order,
       delivery: deliveryMap.get(order.id) ?? null,
     }));
   } catch (err) {
-    console.error('[deliveries] getDeliveries error:', err);
-    return [];
+    console.warn('[deliveries] fallback to prototype due to:', err);
+    // Import dynamically to avoid circular dependency if any
+    const { PROTOTYPE_ORDERS } = require('@/lib/utils/prototypeData');
+    return PROTOTYPE_ORDERS.map((order: Order) => ({
+      ...order,
+      delivery: {
+        id: `proto-del-${order.id}`,
+        order_id: order.id,
+        courier: "J&T Express",
+        tracking_number: "JT" + Math.floor(Math.random() * 100000000),
+        estimated_date: new Date(Date.now() + 86400000 * 2).toISOString(),
+        status: "on_the_way",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    }));
   }
 }
 
